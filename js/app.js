@@ -24,8 +24,11 @@ $("#design").change(function() {
 
 var money = [200,100,100,100,100,100,100]
 var activities = $("fieldset label [type='checkbox']")
+var totalPrice = 0;
+
 activities.change(function() {
-  var totalPrice = 0
+  $("#activity-error").detach();
+  totalPrice = 0;
   for (i = 0; i < 7; i++) {
     if (activities[i].checked) {
       totalPrice += money[i];
@@ -38,33 +41,68 @@ activities.change(function() {
   console.log(totalPrice);
 });
 
+var tuesdayAm = $(".tuesday-am")
+var tuesdayPm = $(".tuesday-pm")
 // Malking mutually exclusive checkboxes
-$(".tuesday-am").click(function() {
-    var checkedState = $(this).is(":checked");
-    $(".tuesday-am").parent().removeAttr("class");
-    $(".tuesday-am").attr('disabled', checkedState);
-    $(this).attr('disabled',false);
-    $(".tuesday-am:disabled").parent().attr("class","disabled");
-});
-
-$(".tuesday-pm").click(function() {
-    var checkedState = $(this).is(":checked");
-    $(".tuesday-pm").parent().removeAttr("class");
-    $(".tuesday-pm").attr('disabled', checkedState);
-    $(this).attr('disabled',false);
-    $(".tuesday-pm:disabled").parent().attr("class","disabled");
-});
+function setMutualExclusiveCheckboxes(tuesdayAm) {
+  tuesdayAm.click(function() {
+      var checkedState = $(this).is(":checked");
+      tuesdayAm.attr('disabled', checkedState);
+      $(this).attr('disabled',false);
+      // Adding/removing class="disabled" to parent label
+      tuesdayAm.each(function(index) {
+        if (tuesdayAm.eq(index).is(":disabled")) {
+          tuesdayAm.eq(index).parent().attr("class","disabled")
+        } else {
+          tuesdayAm.eq(index).parent().removeAttr("class");
+        }
+      });
+    });
+  }
+setMutualExclusiveCheckboxes(tuesdayAm);
+setMutualExclusiveCheckboxes(tuesdayPm);
 
 
 // show payment fucntion accordingly;
+var options = $("#payment").siblings();
+options.slice(2).hide()
 $("#payment").change(function() {
-  $("option[value='credit card']:selected").parent().siblings().eq(2).show();
-  $("option[value='credit card']:selected").parent().siblings().eq(3).hide();
-  $("option[value='credit card']:selected").parent().siblings().eq(4).hide();
-  $("option[value='paypal']:selected").parent().siblings().eq(2).hide();
-  $("option[value='paypal']:selected").parent().siblings().eq(3).show();
-  $("option[value='paypal']:selected").parent().siblings().eq(4).hide();
-  $("option[value='bitcoin']:selected").parent().siblings().eq(2).hide();
-  $("option[value='bitcoin']:selected").parent().siblings().eq(3).hide();
-  $("option[value='bitcoin']:selected").parent().siblings().eq(4).show();
+  options.slice(2).hide()
+  if ($("option[value='credit card']").is(":selected")) {
+    options.eq(2).show();
+  };
+  if ($("option[value='paypal']").is(":selected")) {
+    options.eq(3).show();
+  };
+  if ($("option[value='bitcoin']").is(":selected")) {
+    options.eq(4).show();
+  };
+});
+
+// error messages
+var nameFieldTest = $("#name").val();
+var email = $("#mail").val();
+
+var nameError = "<span id='name-error' class='error'>please input your name</span>";
+var activityError = "<div id='activity-error' class='error' style='font-size:0.8em'>Please select one activity</div>"
+//.attr("value")
+
+$("button[type='submit']").click(function(){
+  $("#name-error").detach();
+  $("#activity-error").detach();
+  // Name error message
+  if (nameFieldTest.length == 0) {
+    event.preventDefault();
+    console.log("hi");
+    $("label[for='name']").append(nameError);
+//    $("label[for='name']").attr("class","error")
+  }
+
+  // activity error message
+  if (totalPrice == 0) {
+    event.preventDefault();
+    $(".activities legend").append(activityError);
+    console.log("acthi");
+  }
+
 });

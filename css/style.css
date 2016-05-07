@@ -16,6 +16,10 @@ button {
   color: grey;
 }
 
+.error {
+  color: darkred;
+}
+
 body {
   font: 1em/1.5;
   color: #184f68;
