@@ -31,12 +31,40 @@ activities.change(function() {
       totalPrice += money[i];
     }
   }
+  var priceHtml
+  priceHtml = "<h5 id='price'>Total Price: $" + totalPrice + "</h5>";
+  $("#price").remove();
+  $(".activities").append(priceHtml);
   console.log(totalPrice);
 });
 
-activities.eq(1).change(function() {
-  if (activities[1].checked) {
-    activities.eq(3).attr("disabled","false");
-  }
-  console.log("Tuesday Morning");
+// Malking mutually exclusive checkboxes
+$(".tuesday-am").click(function() {
+    var checkedState = $(this).is(":checked");
+    $(".tuesday-am").parent().removeAttr("class");
+    $(".tuesday-am").attr('disabled', checkedState);
+    $(this).attr('disabled',false);
+    $(".tuesday-am:disabled").parent().attr("class","disabled");
+});
+
+$(".tuesday-pm").click(function() {
+    var checkedState = $(this).is(":checked");
+    $(".tuesday-pm").parent().removeAttr("class");
+    $(".tuesday-pm").attr('disabled', checkedState);
+    $(this).attr('disabled',false);
+    $(".tuesday-pm:disabled").parent().attr("class","disabled");
+});
+
+
+// show payment fucntion accordingly;
+$("#payment").change(function() {
+  $("option[value='credit card']:selected").parent().siblings().eq(2).show();
+  $("option[value='credit card']:selected").parent().siblings().eq(3).hide();
+  $("option[value='credit card']:selected").parent().siblings().eq(4).hide();
+  $("option[value='paypal']:selected").parent().siblings().eq(2).hide();
+  $("option[value='paypal']:selected").parent().siblings().eq(3).show();
+  $("option[value='paypal']:selected").parent().siblings().eq(4).hide();
+  $("option[value='bitcoin']:selected").parent().siblings().eq(2).hide();
+  $("option[value='bitcoin']:selected").parent().siblings().eq(3).hide();
+  $("option[value='bitcoin']:selected").parent().siblings().eq(4).show();
 });
