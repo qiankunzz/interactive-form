@@ -1,23 +1,41 @@
 // Set foucs to the name field when page loaded
 $("#name").focus();
+// Hide the color option when a design is not selected
+$("#colors-js-puns").hide();
+
+//$("select").addClass("turnintodropdown");
 
 // Add event listener to selection buttion
 $("#title").change(function() {
-  $("input#other-title").remove();
+  console.log("hi")
+  $("#other-title").remove();
   newField = "<input type='text' id='other-title' name='user_other_title' placeholder='Your Title'>";
-  $("[value='other']:selected").parents().append(newField);
+  $("[value='other']:selected").parent().parent().append(newField);
 });
+
+
+// Add event listener to selection buttion
+
+// titleValue.change(function() {
+//   console.log("hihi")
+//   $("input#other-title").remove();
+//   newField = "<input type='text' id='other-title' name='user_other_title' placeholder='Your Title'>";
+//   $("input[value='other']").append(newField);
+// });
+
 
 // Add event listener to design buttion
 var color = $("#color option");
 $("#design").change(function() {
+  // show the color option when the design is selcted
+  $("#colors-js-puns").show();
   $("#color").empty();
   if ($("#design option")[1].selected) {
       $("#color").append(color.slice(0,3));
     } else if ($("#design option")[2].selected) {
       $("#color").append(color.slice(3,6));
     } else {
-      $("#color").append(color);
+      $("#colors-js-puns").hide();
     }
 });
 
@@ -94,7 +112,7 @@ $("button[type='submit']").click(function(){
   var emailError = "<span id='email-error' class='error'> please enter a valid email</span>";
   var activityError = "<div id='activity-error' class='error' style='font-size:0.8em'>Please select one activity</div>"
   var paymentError = "<div id='payment-error' class='error' style='font-size:0.8em'>Please select a payment method</div>"
-  
+
   var nameField, emailField, creditCardField, zipField, cvvField;
   nameField = $("input#name").val();
   emailField = $("input#mail").val();
