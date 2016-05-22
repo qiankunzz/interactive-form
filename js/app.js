@@ -3,26 +3,19 @@ $("#name").focus();
 // Hide the color option when a design is not selected
 $("#colors-js-puns").hide();
 
-//$("select").addClass("turnintodropdown");
+// append the "turnintodropdown" class to the first dropdown menu
+$("select").eq(0).addClass("turnintodropdown");
 
-// Add event listener to selection buttion
-$("#title").change(function() {
-  console.log("hi")
-  $("#other-title").remove();
-  newField = "<input type='text' id='other-title' name='user_other_title' placeholder='Your Title'>";
-  $("[value='other']:selected").parent().parent().append(newField);
-});
+// Add event listener to role selction buttion
+// The part below is moved to js/select.js
+// where I borrowed the code from http://www.scribbletribe.com/how-to-style-the-select-dropdown/
 
-
-// Add event listener to selection buttion
-
-// titleValue.change(function() {
-//   console.log("hihi")
-//   $("input#other-title").remove();
+// $("#title").change(function() {
+//   console.log("hi")
+//   $("#other-title").remove();
 //   newField = "<input type='text' id='other-title' name='user_other_title' placeholder='Your Title'>";
-//   $("input[value='other']").append(newField);
+//   $("[value='other']:selected").parent().parent().append(newField);
 // });
-
 
 // Add event listener to design buttion
 var color = $("#color option");
@@ -41,8 +34,8 @@ $("#design").change(function() {
 
 
 // Calculate Total Price
-var money = [200,100,100,100,100,100,100]
-var activities = $("fieldset label [type='checkbox']")
+var money = [200,100,100,100,100,100,100];
+var activities = $("fieldset label [type='checkbox']");
 var totalPrice = 0;
 
 activities.change(function() {
@@ -53,7 +46,7 @@ activities.change(function() {
       totalPrice += money[i];
     }
   }
-  var priceHtml
+  var priceHtml;
   priceHtml = "<h4 id='price'>Total Price: $" + totalPrice + "</h4>";
   $("#price").remove();
   $(".activities").append(priceHtml);
@@ -65,8 +58,8 @@ activities.change(function() {
 });
 
 // Bind mutually exclusive objects
-var tuesdayAm = $(".tuesday-am")
-var tuesdayPm = $(".tuesday-pm")
+var tuesdayAm = $(".tuesday-am");
+var tuesdayPm = $(".tuesday-pm");
 // Malking mutually exclusive checkboxes
 function setMutualExclusiveCheckboxes(tuesdayAm) {
   tuesdayAm.click(function() {
@@ -76,7 +69,7 @@ function setMutualExclusiveCheckboxes(tuesdayAm) {
       // Adding/removing class="disabled" to parent label
       tuesdayAm.each(function(index) {
         if (tuesdayAm.eq(index).is(":disabled")) {
-          tuesdayAm.eq(index).parent().attr("class","disabled")
+          tuesdayAm.eq(index).parent().attr("class","disabled");
         } else {
           tuesdayAm.eq(index).parent().removeAttr("class");
         }
@@ -89,20 +82,54 @@ setMutualExclusiveCheckboxes(tuesdayPm);
 
 // show payment fucntion accordingly;
 var options = $("#payment").siblings();
-options.slice(2).hide()
+options.slice(2).hide();
 $("#payment").change(function() {
   $("#payment-error").detach();    //detach previous error message
-  options.slice(2).hide()
+  options.slice(2).hide();
   if ($("option[value='credit card']").is(":selected")) {
     options.eq(2).show();
-  };
+  }
   if ($("option[value='paypal']").is(":selected")) {
     options.eq(3).show();
-  };
+  }
   if ($("option[value='bitcoin']").is(":selected")) {
     options.eq(4).show();
-  };
+  }
 });
+
+// Test if Credit Card number if valid
+/*----------------
+Here I used the code from DiegoSalazar/validate_credit_card.js
+https://gist.github.com/DiegoSalazar/4075533
+----------------*/
+
+function valid_credit_card(value) {
+  // accept only digits, dashes or spaces
+  if (/[^0-9-\s]+/.test(value)) return false;
+
+  // The Luhn Algorithm. It's so pretty.
+  var nCheck = 0, nDigit = 0, bEven = false;
+  value = value.replace(/\D/g, "");
+
+  for (var n = value.length - 1; n >= 0; n--) {
+    var cDigit = value.charAt(n),
+        nDigit = parseInt(cDigit, 10);
+
+    if (bEven) {
+      if ((nDigit *= 2) > 9) nDigit -= 9;
+    }
+
+    nCheck += nDigit;
+    bEven = !bEven;
+  }
+
+  return (nCheck % 10) === 0;
+}
+
+/*----------------
+Above is the code from DiegoSalazar/validate_credit_card.js
+https://gist.github.com/DiegoSalazar/4075533
+----------------*/
 
 
 // Bind Submit button event
@@ -110,8 +137,10 @@ $("button[type='submit']").click(function(){
   // error messages
   var nameError = "<span id='name-error' class='error'> please input your name</span>";
   var emailError = "<span id='email-error' class='error'> please enter a valid email</span>";
-  var activityError = "<div id='activity-error' class='error' style='font-size:0.8em'>Please select one activity</div>"
-  var paymentError = "<div id='payment-error' class='error' style='font-size:0.8em'>Please select a payment method</div>"
+  var activityError = "<div id='activity-error' class='error' style='font-size:0.8em'>Please select one activity</div>";
+  var paymentError = "<div id='payment-error' class='error' style='font-size:0.8em'>Please select a payment method</div>";
+  var creditCardError = "<div id='cc-error' class='error' style='font-size:0.8em'>Please enter a valid credit card number</div>";
+
 
   var nameField, emailField, creditCardField, zipField, cvvField;
   nameField = $("input#name").val();
@@ -124,13 +153,14 @@ $("button[type='submit']").click(function(){
   $("#email-error").detach();
   $("#activity-error").detach();
   $("#payment-error").detach();
-  $("label").removeAttr("class","error")
+  $("#cc-error").detach();
+  $("label").removeAttr("class","error");
 
   // Name error message
-  if (nameField == "") {
+  if (nameField === "") {
     event.preventDefault();
     $("label[for='name']").append(nameError);
-    $("label[for='name']").attr("class","error")      //adding class="error" to label
+    $("label[for='name']").attr("class","error");      //adding class="error" to label
   }
 
   // Test if email valid
@@ -139,11 +169,16 @@ $("button[type='submit']").click(function(){
 .test(emailField);
   console.log(!emailTest);
 
+
+  var isCreditCardValid = valid_credit_card(creditCardField);
+  console.log(isCreditCardValid);
+
+
   // Email error message
-  if (emailField == "" || !emailTest) {
+  if (emailField === "" || !emailTest) {
     event.preventDefault();
     $("label[for='mail']").append(emailError);
-    $("label[for='mail']").attr("class","error")
+    $("label[for='mail']").attr("class","error");
   }
 
   // activity error message
@@ -160,9 +195,10 @@ $("button[type='submit']").click(function(){
 
   if ($("option[value='credit card']").is(":selected")) {
     // Credit Card Info Error Message;
-    if (creditCardField === "") {
+    if (creditCardField === "" || !isCreditCardValid) {
       event.preventDefault();
       $("label[for='cc-num']").attr("class","error");
+      $("#cc-num").parent().parent().append(creditCardError);
     }
 
     if (zipField === "") {

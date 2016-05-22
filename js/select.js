@@ -1,7 +1,7 @@
 function tamingselect()
 {
 	if(!document.getElementById && !document.createTextNode){return;}
-	
+
 // Classes for the link and the visible dropdown
 	var ts_selectclass='turnintodropdown'; 	// class to identify selects
 	var ts_listclass='turnintoselect';		// class to identify ULs
@@ -46,11 +46,19 @@ function tamingselect()
 				newa.href='#';
 				newa.appendChild(document.createTextNode(
 				sels[i].getElementsByTagName('option')[j].text));
-				newli.onclick=function(){ 
+				newli.onclick=function(){
+					$("#other-title").remove();
 					this.elm.value=this.v;
 					ts_swapclass(this.istrigger,ts_triggeron,ts_triggeroff);
 					ts_swapclass(this.parentNode,ts_dropdownopen,ts_dropdownclosed)
 					this.istrigger.firstChild.nodeValue=this.firstChild.firstChild.nodeValue;
+					// Append a title box upon selecing "other"
+					if (this.v === "other") {
+						console.log("other!")
+						newField = "<input type='text' id='other-title' name='user_other_title' placeholder='Your Title'>";
+					  $("#title").parent().append(newField);
+					}
+
 					return false;
 				}
 				newli.appendChild(newa);
@@ -65,10 +73,10 @@ function tamingselect()
 			count++;
 		}
 	}
-	
+
 /*
 	Turn all ULs with the class defined above into dropdown navigations
-*/	
+*/
 
 	var uls=document.getElementsByTagName('ul');
 	for(var i=0;i<uls.length;i++)
@@ -80,8 +88,8 @@ function tamingselect()
 			for(j=0;j<uls[i].getElementsByTagName('a').length;j++)
 			{
 				var newopt=document.createElement('option');
-				newopt.value=uls[i].getElementsByTagName('a')[j].href;	
-				newopt.appendChild(document.createTextNode(uls[i].getElementsByTagName('a')[j].innerHTML));	
+				newopt.value=uls[i].getElementsByTagName('a')[j].href;
+				newopt.appendChild(document.createTextNode(uls[i].getElementsByTagName('a')[j].innerHTML));
 				newselect.appendChild(newopt);
 			}
 			newselect.onchange=function()
