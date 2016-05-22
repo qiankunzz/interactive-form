@@ -3,26 +3,19 @@ $("#name").focus();
 // Hide the color option when a design is not selected
 $("#colors-js-puns").hide();
 
-//$("select").addClass("turnintodropdown");
+// append the "turnintodropdown" class to the first dropdown menu
+$("select").eq(0).addClass("turnintodropdown");
 
-// Add event listener to selection buttion
-$("#title").change(function() {
-  console.log("hi")
-  $("#other-title").remove();
-  newField = "<input type='text' id='other-title' name='user_other_title' placeholder='Your Title'>";
-  $("[value='other']:selected").parent().parent().append(newField);
-});
+// Add event listener to role selction buttion
+// The part below is moved to js/select.js
+// where I borrowed the code from http://www.scribbletribe.com/how-to-style-the-select-dropdown/
 
-
-// Add event listener to selection buttion
-
-// titleValue.change(function() {
-//   console.log("hihi")
-//   $("input#other-title").remove();
+// $("#title").change(function() {
+//   console.log("hi")
+//   $("#other-title").remove();
 //   newField = "<input type='text' id='other-title' name='user_other_title' placeholder='Your Title'>";
-//   $("input[value='other']").append(newField);
+//   $("[value='other']:selected").parent().parent().append(newField);
 // });
-
 
 // Add event listener to design buttion
 var color = $("#color option");
@@ -104,6 +97,40 @@ $("#payment").change(function() {
   };
 });
 
+// Test if Credit Card number if valid
+/*----------------
+Here I used the code from DiegoSalazar/validate_credit_card.js
+https://gist.github.com/DiegoSalazar/4075533
+----------------*/
+
+function valid_credit_card(value) {
+  // accept only digits, dashes or spaces
+  if (/[^0-9-\s]+/.test(value)) return false;
+
+  // The Luhn Algorithm. It's so pretty.
+  var nCheck = 0, nDigit = 0, bEven = false;
+  value = value.replace(/\D/g, "");
+
+  for (var n = value.length - 1; n >= 0; n--) {
+    var cDigit = value.charAt(n),
+        nDigit = parseInt(cDigit, 10);
+
+    if (bEven) {
+      if ((nDigit *= 2) > 9) nDigit -= 9;
+    }
+
+    nCheck += nDigit;
+    bEven = !bEven;
+  }
+
+  return (nCheck % 10) == 0;
+}
+
+/*----------------
+Above is the code from DiegoSalazar/validate_credit_card.js
+https://gist.github.com/DiegoSalazar/4075533
+----------------*/
+
 
 // Bind Submit button event
 $("button[type='submit']").click(function(){
@@ -112,6 +139,8 @@ $("button[type='submit']").click(function(){
   var emailError = "<span id='email-error' class='error'> please enter a valid email</span>";
   var activityError = "<div id='activity-error' class='error' style='font-size:0.8em'>Please select one activity</div>"
   var paymentError = "<div id='payment-error' class='error' style='font-size:0.8em'>Please select a payment method</div>"
+  var creditCardError = "<div id='cc-error' class='error' style='font-size:0.8em'>Please enter a valid credit card number</div>"
+
 
   var nameField, emailField, creditCardField, zipField, cvvField;
   nameField = $("input#name").val();
@@ -124,6 +153,7 @@ $("button[type='submit']").click(function(){
   $("#email-error").detach();
   $("#activity-error").detach();
   $("#payment-error").detach();
+  $("#cc-error").detach();
   $("label").removeAttr("class","error")
 
   // Name error message
@@ -138,6 +168,11 @@ $("button[type='submit']").click(function(){
   var emailTest = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i
 .test(emailField);
   console.log(!emailTest);
+
+
+  var isCreditCardValid = valid_credit_card(creditCardField);
+  console.log(isCreditCardValid);
+
 
   // Email error message
   if (emailField == "" || !emailTest) {
@@ -160,9 +195,10 @@ $("button[type='submit']").click(function(){
 
   if ($("option[value='credit card']").is(":selected")) {
     // Credit Card Info Error Message;
-    if (creditCardField === "") {
+    if (creditCardField === "" || !isCreditCardValid) {
       event.preventDefault();
       $("label[for='cc-num']").attr("class","error");
+      $("#cc-num").parent().parent().append(creditCardError);
     }
 
     if (zipField === "") {
