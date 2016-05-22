@@ -34,8 +34,8 @@ $("#design").change(function() {
 
 
 // Calculate Total Price
-var money = [200,100,100,100,100,100,100]
-var activities = $("fieldset label [type='checkbox']")
+var money = [200,100,100,100,100,100,100];
+var activities = $("fieldset label [type='checkbox']");
 var totalPrice = 0;
 
 activities.change(function() {
@@ -46,7 +46,7 @@ activities.change(function() {
       totalPrice += money[i];
     }
   }
-  var priceHtml
+  var priceHtml;
   priceHtml = "<h4 id='price'>Total Price: $" + totalPrice + "</h4>";
   $("#price").remove();
   $(".activities").append(priceHtml);
@@ -58,8 +58,8 @@ activities.change(function() {
 });
 
 // Bind mutually exclusive objects
-var tuesdayAm = $(".tuesday-am")
-var tuesdayPm = $(".tuesday-pm")
+var tuesdayAm = $(".tuesday-am");
+var tuesdayPm = $(".tuesday-pm");
 // Malking mutually exclusive checkboxes
 function setMutualExclusiveCheckboxes(tuesdayAm) {
   tuesdayAm.click(function() {
@@ -69,7 +69,7 @@ function setMutualExclusiveCheckboxes(tuesdayAm) {
       // Adding/removing class="disabled" to parent label
       tuesdayAm.each(function(index) {
         if (tuesdayAm.eq(index).is(":disabled")) {
-          tuesdayAm.eq(index).parent().attr("class","disabled")
+          tuesdayAm.eq(index).parent().attr("class","disabled");
         } else {
           tuesdayAm.eq(index).parent().removeAttr("class");
         }
@@ -82,19 +82,19 @@ setMutualExclusiveCheckboxes(tuesdayPm);
 
 // show payment fucntion accordingly;
 var options = $("#payment").siblings();
-options.slice(2).hide()
+options.slice(2).hide();
 $("#payment").change(function() {
   $("#payment-error").detach();    //detach previous error message
-  options.slice(2).hide()
+  options.slice(2).hide();
   if ($("option[value='credit card']").is(":selected")) {
     options.eq(2).show();
-  };
+  }
   if ($("option[value='paypal']").is(":selected")) {
     options.eq(3).show();
-  };
+  }
   if ($("option[value='bitcoin']").is(":selected")) {
     options.eq(4).show();
-  };
+  }
 });
 
 // Test if Credit Card number if valid
@@ -123,7 +123,7 @@ function valid_credit_card(value) {
     bEven = !bEven;
   }
 
-  return (nCheck % 10) == 0;
+  return (nCheck % 10) === 0;
 }
 
 /*----------------
@@ -137,9 +137,9 @@ $("button[type='submit']").click(function(){
   // error messages
   var nameError = "<span id='name-error' class='error'> please input your name</span>";
   var emailError = "<span id='email-error' class='error'> please enter a valid email</span>";
-  var activityError = "<div id='activity-error' class='error' style='font-size:0.8em'>Please select one activity</div>"
-  var paymentError = "<div id='payment-error' class='error' style='font-size:0.8em'>Please select a payment method</div>"
-  var creditCardError = "<div id='cc-error' class='error' style='font-size:0.8em'>Please enter a valid credit card number</div>"
+  var activityError = "<div id='activity-error' class='error' style='font-size:0.8em'>Please select one activity</div>";
+  var paymentError = "<div id='payment-error' class='error' style='font-size:0.8em'>Please select a payment method</div>";
+  var creditCardError = "<div id='cc-error' class='error' style='font-size:0.8em'>Please enter a valid credit card number</div>";
 
 
   var nameField, emailField, creditCardField, zipField, cvvField;
@@ -154,13 +154,13 @@ $("button[type='submit']").click(function(){
   $("#activity-error").detach();
   $("#payment-error").detach();
   $("#cc-error").detach();
-  $("label").removeAttr("class","error")
+  $("label").removeAttr("class","error");
 
   // Name error message
-  if (nameField == "") {
+  if (nameField === "") {
     event.preventDefault();
     $("label[for='name']").append(nameError);
-    $("label[for='name']").attr("class","error")      //adding class="error" to label
+    $("label[for='name']").attr("class","error");      //adding class="error" to label
   }
 
   // Test if email valid
@@ -175,10 +175,10 @@ $("button[type='submit']").click(function(){
 
 
   // Email error message
-  if (emailField == "" || !emailTest) {
+  if (emailField === "" || !emailTest) {
     event.preventDefault();
     $("label[for='mail']").append(emailError);
-    $("label[for='mail']").attr("class","error")
+    $("label[for='mail']").attr("class","error");
   }
 
   // activity error message
