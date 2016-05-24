@@ -2,6 +2,7 @@
 $("#name").focus();
 // Hide the color option when a design is not selected
 $("#colors-js-puns").hide();
+$("#other-title").hide()
 
 // append the "turnintodropdown" class to the first dropdown menu
 $("select").eq(0).addClass("turnintodropdown");
@@ -82,7 +83,7 @@ setMutualExclusiveCheckboxes(tuesdayPm);
 
 // show payment fucntion accordingly;
 var options = $("#payment").siblings();
-options.slice(2).hide();
+options.slice(3).hide();
 $("#payment").change(function() {
   $("#payment-error").detach();    //detach previous error message
   options.slice(2).hide();

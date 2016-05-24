@@ -47,16 +47,15 @@ function tamingselect()
 				newa.appendChild(document.createTextNode(
 				sels[i].getElementsByTagName('option')[j].text));
 				newli.onclick=function(){
-					$("#other-title").remove();
+					$("#other-title").hide();
 					this.elm.value=this.v;
 					ts_swapclass(this.istrigger,ts_triggeron,ts_triggeroff);
 					ts_swapclass(this.parentNode,ts_dropdownopen,ts_dropdownclosed)
 					this.istrigger.firstChild.nodeValue=this.firstChild.firstChild.nodeValue;
 					// Append a title box upon selecing "other"
 					if (this.v === "other") {
-						console.log("other!")
-						newField = "<input type='text' id='other-title' name='user_other_title' placeholder='Your Title'>";
-					  $("#title").parent().append(newField);
+				//		newField = "<input type='text' id='other-title' name='user_other_title' placeholder='Your Title'>";
+					  $("#other-title").show();
 					}
 
 					return false;
